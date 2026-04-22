@@ -1,4 +1,4 @@
-# LDZ Avatars — Simulated Patient MVP
+# Procet Filip — Simulated Patient
 
 A browser-based interactive AI avatar that simulates a model clinical profile for educational training. The avatar speaks in Slovak.
 
