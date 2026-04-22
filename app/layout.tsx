@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "LDZ Avatars — Simulated Patient",
+  title: "Project Froyd — Simulated Patient",
   description: "Educational simulation of a clinical patient avatar. Not a medical or diagnostic tool.",
   viewport: {
     width: "device-width",

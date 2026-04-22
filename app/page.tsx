@@ -330,7 +330,7 @@ export default function Home() {
       {/* Header */}
       <header className="border-b border-zinc-800 px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-sm sm:text-base font-bold tracking-tight">LDZ Avatars</h1>
+          <h1 className="text-sm sm:text-base font-bold tracking-tight">Project Froyd</h1>
           <p className="text-[10px] sm:text-xs text-zinc-500 mt-0.5 hidden sm:block">Simulated patient · Educational simulation · SK</p>
         </div>
         <StatusBadge status={status} />
