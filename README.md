@@ -1,4 +1,4 @@
-# Procet Filip — Simulated Patient
+# Project Froyd — Simulated Patient
 
 A browser-based interactive AI avatar that simulates a model clinical profile for educational training. The avatar speaks in Slovak.
 
