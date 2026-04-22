@@ -30,6 +30,7 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const sessionRef = useRef<LiveAvatarSession | null>(null);
   const startedAtRef = useRef<string>("");
+  const fullscreenContainerRef = useRef<HTMLDivElement>(null);
 
   // Avatar config — editable in UI before starting a session
   const [avatarId, setAvatarId] = useState(DEFAULT_AVATAR_ID);
@@ -45,6 +46,8 @@ export default function Home() {
   const [avatarChunk, setAvatarChunk] = useState("");
   const [fetchedTranscript, setFetchedTranscript] = useState<TranscriptResponse | null>(null);
   const [debugLog, setDebugLog] = useState<string[]>([]);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [lastAvatarText, setLastAvatarText] = useState("");
 
   function log(msg: string) {
     const ts = new Date().toLocaleTimeString("sk-SK");
@@ -59,6 +62,21 @@ export default function Home() {
       { role, text: trimmed, timestamp: new Date().toISOString() },
     ]);
   }
+
+  const toggleFullscreen = useCallback(async () => {
+    if (!document.fullscreenElement) {
+      await fullscreenContainerRef.current?.requestFullscreen();
+    } else {
+      await document.exitFullscreen();
+    }
+  }, []);
+
+  // Sync isFullscreen state with browser fullscreen changes (e.g. ESC key)
+  useEffect(() => {
+    const handler = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", handler);
+    return () => document.removeEventListener("fullscreenchange", handler);
+  }, []);
 
   // Persist transcript to server after session ends
   async function saveTranscript(
@@ -123,6 +141,7 @@ export default function Home() {
     setTranscript([]);
     setUserChunk("");
     setAvatarChunk("");
+    setLastAvatarText("");
     setStatus("creating-session");
     log("Requesting session token from backend…");
 
@@ -257,6 +276,7 @@ export default function Home() {
       try {
         if (evt?.text) {
           addEntry("avatar", evt.text);
+          setLastAvatarText(evt.text);
           setAvatarChunk("");
         }
       } catch { /* malformed payload — silently ignore */ }
@@ -320,7 +340,14 @@ export default function Home() {
 
         {/* Video stream — first on mobile so avatar is immediately visible */}
         <section>
-          <AvatarPanel ref={videoRef} status={status} />
+          <AvatarPanel
+            ref={videoRef}
+            status={status}
+            isFullscreen={isFullscreen}
+            onToggleFullscreen={toggleFullscreen}
+            containerRef={fullscreenContainerRef}
+            subtitle={avatarChunk || lastAvatarText || undefined}
+          />
         </section>
 
         {/* Controls */}
